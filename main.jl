@@ -1,6 +1,5 @@
 using Flux
 using BSON
-using Printf
 
 const comment_text::String = "################################################################################
 # Neural network connection values (weights and biases).
@@ -20,60 +19,31 @@ const comment_text::String = "##################################################
 ############################################################"
 
 function main()
-read_data = BSON.load("3-4-5-1.bson")
-model = read_data[:model]
-open("output.txt","w") do f
-
-
-
-# println(comment_text)
-
-println(f, comment_text)
-
-counter::Int32 = 0
-index::Int32 = 1
-
-for l_s = 1:length(model)
-# for l_s = 1:1
-    n_s = 1
-    n_e = 1
-    number_nurons_next, number_nurons_current = size(model[l_s].weight)
-    # println(number_nurons_current)
-    # println(number_nurons_next)
-    # println(number_nurons_current)
-    # println(number_nurons_next)
-    for neuron in model[l_s].weight
-        # println(neuron)
-        # println(counter)
-        # println(f, "$(neuron)      a       $(index)     $(l_s - 1)    $(n_s)    $(l_s)    $(n_e)")
-        println(f, "$(0)                       a       $(index)       $(l_s - 1)    $(n_s)    $(l_s)    $(n_e)")
-        # println(f, abs(neuron), index, (l_s - 1), n_s, l_s, n_e)
-        
-        # @printf("%f                 a         %d      %d      %d      %d      %d \n", 
-                # abs(neuron), index,
-                # (l_s - 1), n_s, l_s, n_e)
-        counter += 1
-        index += 1
-        n_e += 1
-        if n_e == number_nurons_next + 1
-            n_s += 1
+    read_data = BSON.load("3-4-5-1.bson")
+    model = read_data[:model]
+    open("output.txt", "w") do f
+        println(f, comment_text)
+        index::Int32 = 1
+        for l_s = 1:length(model)
+            n_s = 1
             n_e = 1
+            number_nurons_next, number_nurons_current = size(model[l_s].weight)
+            for neuron in model[l_s].weight
+                println(
+                    f,
+                    "$(neuron)      a       $(index)     $(l_s - 1)    $(n_s)    $(l_s)    $(n_e)",
+                )
+                index += 1
+                n_e += 1
+                if n_e == number_nurons_next + 1
+                    n_s += 1
+                    n_e = 1
+                end
+            end
         end
     end
-    
-    counter = 0
-
-end
-end
-
-# println(model.weights)
-# println(length(model))
-
-
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__
     main()
 end
-
-
