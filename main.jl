@@ -22,27 +22,34 @@ const comment_text::String = "##################################################
 function main()
 read_data = BSON.load("20-30-15-1.bson")
 model = read_data[:model]
+open("output.txt","w") do f
 
-println(comment_text)
+
+
+# println(comment_text)
+
+println(f, comment_text)
 
 counter::Int32 = 0
 index::Int32 = 1
 
-# for i = 1:length(model)
-for l_s = 1:1
+for l_s = 1:length(model)
+# for l_s = 1:1
     n_s = 0
     n_e = 1
     number_nurons_current, number_nurons_next = size(model[l_s].weight)
     # println(number_nurons_current)
     # println(number_nurons_next)
-    for neuron in model[l_s].weight[1:60]
+    for neuron in model[l_s].weight
         # println(neuron)
         # println(counter)
-        # println("$(round(neuron, digits=4))      a       $(index)     $(l_s - 1)    $(n_s)    $(l_s)    $(n_e)")
-
-        @printf("%f                 a         %d      %d      %d      %d      %d \n", 
-                abs(neuron), index,
-                (l_s - 1), n_s, l_s, n_e)
+        # println(f, "$(neuron)      a       $(index)     $(l_s - 1)    $(n_s)    $(l_s)    $(n_e)")
+        println(f, "$(0)                       a       $(index)       $(l_s - 1)    $(n_s)    $(l_s)    $(n_e)")
+        # println(f, abs(neuron), index, (l_s - 1), n_s, l_s, n_e)
+        
+        # @printf("%f                 a         %d      %d      %d      %d      %d \n", 
+                # abs(neuron), index,
+                # (l_s - 1), n_s, l_s, n_e)
         counter += 1
         index += 1
         n_e += 1
@@ -53,6 +60,8 @@ for l_s = 1:1
     end
     
     counter = 0
+
+end
 end
 
 # println(model.weights)
