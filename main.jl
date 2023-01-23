@@ -18,29 +18,49 @@ const comment_text::String = "##################################################
 #             connection t     index   l_s   n_s   l_e   n_e
 ############################################################"
 
-function main()
-    read_data = BSON.load("3-4-5-1.bson")
-    model = read_data[:model]
-    open("output.txt", "w") do f
-        println(f, comment_text)
-        index::Int32 = 1
-        for l_s = 1:length(model)
-            n_s = 1
-            n_e = 1
-            number_nurons_next, number_nurons_current = size(model[l_s].weight)
-            for neuron in model[l_s].weight
-                println(
-                    f,
-                    "$(neuron)      a       $(index)     $(l_s - 1)    $(n_s)    $(l_s)    $(n_e)",
-                )
-                index += 1
-                n_e += 1
-                if n_e == number_nurons_next + 1
-                    n_s += 1
-                    n_e = 1
-                end
+function parse_command_line_arguments()::String
+    if length(ARGS) == 0
+        println("Argument <file name> is not provided")
+        println("USAGE: julia main.jl <file name>")
+        println("Format of <file name> must be .bson")
+        exit()
+    else
+        input_file_name = ARGS[1]
+    end
+    return input_file_name
+end
+
+function print_res_to_file(f, model)
+    println(f, comment_text)
+    index::Int32 = 1
+    for l_s = 1:length(model)
+        n_s = 1
+        n_e = 1
+        number_nurons_next, number_nurons_current = size(model[l_s].weight)
+        for neuron in model[l_s].weight
+            println(
+                f,
+                "$(neuron)      a       $(index)     $(l_s - 1)    $(n_s)    $(l_s)    $(n_e)",
+            )
+            index += 1
+            n_e += 1
+            if n_e == number_nurons_next + 1
+                n_s += 1
+                n_e = 1
             end
         end
+    end
+end
+
+function main()
+    input_file_name = parse_command_line_arguments()
+    read_data = BSON.load(input_file_name)
+    model = read_data[:model]
+    output_file_name = input_file_name * "-out"
+
+
+    open(output_file_name, "w") do f
+        print_res_to_file(f, model)
     end
 end
 
